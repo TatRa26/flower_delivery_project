@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cart-background">
+    <div class="container text-center py-5">
+        <h1 class="mb-3 text-primary">Ваша корзина</h1>
+        <p class="mb-4 text-primary">Посмотрите, что вы выбрали для заказа 🌸</p>
+    </div>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4 text-primary">Содержимое корзины</h2>
+
+        {% if items %}
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="table-responsive bg-white p-4 shadow rounded">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Товар</th>
+                                <th>Количество</th>
+                                <th>Цена за единицу</th>
+                                <th>Общая цена</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>
+                                    <form method="post" action="{% url 'update_cart_item' item.product.id %}">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control d-inline-block w-50">
+                                        <button type="submit" class="btn btn-secondary btn-sm mt-1">Обновить</button>
+                                    </form>
+                                </td>
+                                <td>{{ item.product.price }} руб.</td>
+                                <td><strong>{{ item.total_price }} руб.</strong></td>
+                                <td>
+                                    <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-4">
+                    <h5>Общая сумма: <span class="text-success">{{ total_price }} руб.</span></h5>
+                    <div class="d-flex justify-content-end gap-3">
+                        <a href="{% url 'clear_cart' %}" class="btn btn-outline-danger">Очистить корзину</a>
+                        <a href="{% url 'checkout' %}" class="btn btn-primary">Оформить заказ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <h5>Ваша корзина пуста 🛒</h5>
+            <p>Вернитесь в <a href="{% url 'catalog' %}" class="text-decoration-underline">каталог</a> и добавьте товары.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="text-success mb-4">Добро пожаловать в Flower Delivery! 🌸</h2>
+
+    {% if user.is_authenticated %}
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">Привет, {{ user.username }}!</h4>
+            <p>Рады видеть тебя снова! Здесь ты можешь выбрать и заказать самые свежие и красивые цветы.</p>
+            <hr>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Выйти из аккаунта</a>
+            <a href="{% url 'user_orders' %}" class="btn btn-secondary">Мои заказы</a>
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            <p>Пожалуйста, войдите в свой аккаунт, чтобы получить доступ ко всем функциям.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary me-2">Войти</a>
+            <a href="{% url 'register' %}" class="btn btn-success">Создать аккаунт</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

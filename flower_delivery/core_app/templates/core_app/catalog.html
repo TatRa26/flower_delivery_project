@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid" style="background-color: #e6f7ff; min-height: 100vh; padding-top: 20px; padding-bottom: 20px;">
+    <div class="container">
+        <h1 class="text-center mb-4">Каталог товаров</h1>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                        <p class="text-success"><strong>{{ product.price }} руб.</strong></p>
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-secondary mb-2">Отзывы</a>
+                        <form method="post" action="{% url 'add_to_cart' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                        </form>
+                        <a href="{% url 'cart_view' %}" class="btn btn-warning">Перейти в корзину</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Товары отсутствуют.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

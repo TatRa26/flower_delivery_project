@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="cart-background">
+    <div class="container text-center py-5">
+        <h1 class="mb-3 text-primary">История заказов</h1>
+        <p class="mb-4 text-primary">Посмотрите, какие заказы вы уже оформили 🌸</p>
+    </div>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4 text-primary">Ваши заказы</h2>
+
+        {% if orders %}
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="bg-white p-4 shadow rounded">
+                    {% for order in orders %}
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <h5 class="text-secondary">
+                            Заказ №{{ order.id }} от {{ order.order_date|date:"d.m.Y H:i" }}
+                        </h5>
+                        <p class="mb-1"><strong>Статус:</strong> <span class="text-primary">{{ order.get_status_display }}</span></p>
+                        <p class="mb-1"><strong>Адрес доставки:</strong> {{ order.delivery_address }}</p>
+                        <h6 class="mt-3 text-secondary">Товары:</h6>
+                        <ul class="list-group mb-3">
+                            {% for item in order.order_items.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ item.product.name }} ({{ item.quantity }} шт.)</span>
+                                <span class="text-success">{{ item.quantity|floatformat:2 }} × {{ item.product.price|floatformat:2 }} руб.</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <form method="post" action="{% url 'repeat_order' order.id %}">
+                            {% csrf_token %}
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Повторить заказ</button>
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <h5>У вас пока нет заказов 🛍️</h5>
+            <p>Посмотрите наш <a href="{% url 'catalog' %}" class="text-decoration-underline">каталог</a> и сделайте первый заказ!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+

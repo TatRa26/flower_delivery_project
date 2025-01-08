@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid" style="background-color: #e6f7ff; min-height: 100vh; padding-top: 20px; padding-bottom: 20px;">
+    <div class="container mt-5">
+        <h2 class="text-center mb-4 text-primary">Оформление заказа</h2>
+
+        {% if items %}
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="bg-white p-4 shadow rounded">
+                    <h3 class="text-secondary mb-4">Ваши товары</h3>
+                    <ul class="list-group mb-4">
+                        {% for item in items %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ item.product.name }}</strong> <br>
+                                Количество: {{ item.quantity }} шт. <br>
+                                Цена за штуку: {{ item.product.price }} руб.
+                            </div>
+                            <span class="text-success"><strong>{{ item.product.price|floatformat:2 }} × {{ item.quantity }} = {{ item.product.price|floatformat:2|add:item.quantity|floatformat:2 }} руб.</strong></span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="text-end mb-4">
+                        <h5>Итоговая сумма: <span class="text-success">{{ total_price }} руб.</span></h5>
+                    </div>
+
+                    <form method="post" class="p-3 border rounded bg-light">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="address" class="form-label"><strong>Введите адрес доставки:</strong></label>
+                            <textarea id="address" name="address" class="form-control" rows="3" required placeholder="Улица, дом, квартира, город"></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Оформить заказ</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+            <h5>Ваша корзина пуста 🛒</h5>
+            <p>Вернитесь в <a href="{% url 'catalog' %}" class="text-decoration-underline">каталог</a> и добавьте товары.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
