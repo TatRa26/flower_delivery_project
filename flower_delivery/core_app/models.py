@@ -91,6 +91,21 @@ class Order(models.Model):
         null=True,
         verbose_name="Адрес доставки"
     )
+    delivery_date = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Дата и время доставки"
+    )
+    recipient_name = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Имя получателя"
+    )
+    recipient_phone = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Телефон получателя"
+    )
 
     def __str__(self):
         return f"Заказ №{self.id} - {self.user.username}"
@@ -98,6 +113,7 @@ class Order(models.Model):
     class Meta:
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
+
 
 
 # Позиция заказа
