@@ -4,11 +4,7 @@ from database.db_utils import get_db_connection
 from keyboards.back_button import back_button
 import os
 
-
-
-
-
-
+from config import MEDIA_PATH
 
 router = Router()
 
@@ -51,7 +47,7 @@ async def show_orders(callback: CallbackQuery):
 
                     # Путь к изображению товара
                     if image:
-                        image_path = os.path.join("C:/Users/Татьяна/PycharmProjects/flower_delivery_project/flower_delivery/media", image)
+                        image_path = os.path.join(MEDIA_PATH, image)
 
                         if os.path.exists(image_path):
                             photo = FSInputFile(image_path)

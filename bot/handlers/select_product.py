@@ -6,6 +6,8 @@ from database.db_utils import get_db_connection
 from aiogram.types import CallbackQuery, FSInputFile
 import os
 
+from config import MEDIA_PATH
+
 router = Router()
 
 # Словарь для хранения количества (на уровне пользователя)
@@ -41,10 +43,7 @@ async def select_product(callback: CallbackQuery):
 
     if product:
         name, price, image = product
-        image_path = os.path.join(
-            "C:/Users/Татьяна/PycharmProjects/flower_delivery_project/flower_delivery/media",
-            image
-        )
+        image_path = os.path.join(MEDIA_PATH, image)
 
         # Удаляем текущее сообщение
         await callback.message.delete()
