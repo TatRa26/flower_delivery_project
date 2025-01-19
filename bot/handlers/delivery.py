@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from database.db_utils import get_db_connection
 from keyboards.main_menu import main_menu  # Клавиатура с главным меню
+from handlers.select_product import active_messages  # Состояние кнопки "Выбрать"
 
 router = Router()
 
@@ -71,7 +72,7 @@ async def enter_recipient_phone(message: Message, state: FSMContext):
     user_id = message.from_user.id
     data = await state.get_data()
 
-    # Сохраняем данные в словарь user_delivery_info
+    # Сохраняем данные для доставки в словарь
     user_delivery_info[user_id] = {
         "date_time": data["date_time"],
         "address": data["address"],
@@ -79,7 +80,7 @@ async def enter_recipient_phone(message: Message, state: FSMContext):
         "recipient_phone": data["recipient_phone"]
     }
 
-    # Записываем данные для доставки в базу данных
+    # Обновляем данные доставки в базе данных
     connection = get_db_connection()
     cursor = connection.cursor()
 
@@ -90,8 +91,6 @@ async def enter_recipient_phone(message: Message, state: FSMContext):
 
     if user:
         user_db_id = user[0]
-
-        # Обновляем заказ с данными для доставки
         cursor.execute(
             """
             UPDATE core_app_order
@@ -104,11 +103,29 @@ async def enter_recipient_phone(message: Message, state: FSMContext):
 
     connection.close()
 
+    # Очистка истории чата
+    await message.answer("Данные для доставки успешно сохранены! История чата будет очищена.")
+    await message.delete()  # Удаляем последнее сообщение пользователя
+
+    # Сбрасываем состояние кнопки "Выбрать"
+    if user_id in active_messages:
+        del active_messages[user_id]
+
+    # Возвращаем пользователя в главное меню
     await message.answer(
-        "Данные для доставки успешно сохранены! Теперь ваш заказ готов. Возвращаемся в главное меню.",
+        "Теперь ваш заказ готов. Возвращаемся в главное меню.",
         reply_markup=main_menu()
     )
 
+    # Сбрасываем состояние FSM
     await state.clear()
+
+
+
+
+
+
+
+
 
 

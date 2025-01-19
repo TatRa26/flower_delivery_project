@@ -11,11 +11,20 @@ router = Router()
 # Словарь для хранения количества (на уровне пользователя)
 user_quantities = {}
 
+# Словарь для отслеживания активных сообщений (кнопок)
+active_messages = {}
+
+
 # Обработчик кнопки "Выбрать"
 @router.callback_query(F.data.startswith("select_product:"))
 async def select_product(callback: CallbackQuery):
     product_id = int(callback.data.split(":")[1])
     user_id = callback.from_user.id
+
+    # Проверяем, заблокирована ли кнопка "Выбрать" для этого пользователя
+    if user_id in active_messages and active_messages[user_id]:
+        await callback.answer("Вы уже оформили заказ. Кнопка заблокирована.")
+        return
 
     # Устанавливаем начальное количество для выбранного товара
     set_user_quantity(user_id=user_id, product_id=product_id)
@@ -59,6 +68,12 @@ async def select_product(callback: CallbackQuery):
         )
     else:
         await callback.message.answer("Товар не найден.")
+
+
+
+
+
+
 
 
 
