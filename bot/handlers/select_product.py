@@ -5,7 +5,6 @@ from handlers.quantity import set_user_quantity
 from database.db_utils import get_db_connection
 from aiogram.types import CallbackQuery, FSInputFile
 import os
-
 from config import MEDIA_PATH
 
 router = Router()
