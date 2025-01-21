@@ -1,5 +1,6 @@
 from django.test import TestCase
-from .models import User, Product, Order, OrderItem, Cart, CartItem, Review
+from core_app.models import User, Product, Order, OrderItem, Cart, CartItem, Review
+
 
 
 class UserModelTest(TestCase):
@@ -117,13 +118,3 @@ class ReviewModelTest(TestCase):
             rating=5
         )
         self.assertEqual(review.rating, 5)
-
-
-
-
-
-
-
-
-
-
